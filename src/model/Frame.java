@@ -1,5 +1,11 @@
 package model;
 
+/**
+ * 
+ * Class to represent a single frame of the game. Contains storage of throw
+ * results. Frame information (spare, strike or bonus frame)
+ *
+ */
 public class Frame {
 
 	private BowlingThrow throw1;
@@ -14,10 +20,10 @@ public class Frame {
 	}
 
 	public void playFrame() {
-		throw1 = new BowlingThrow(maxNum);
+		throw1 = new BowlingThrow(maxNum, true);
 		int result1 = throw1.getScoreBall();
 		if (result1 < 10) {
-			throw2 = new BowlingThrow(maxNum - result1);
+			throw2 = new BowlingThrow(maxNum - result1, true);
 		}
 		if (result1 == maxNum) {
 			setStrike(true);
@@ -28,13 +34,13 @@ public class Frame {
 	}
 
 	public void playBonusFrame(int numThrows) {
-		throw1 = new BowlingThrow(maxNum);
+		throw1 = new BowlingThrow(maxNum, true);
 		int result1 = throw1.getScoreBall();
 		if (numThrows == 2 && result1 < maxNum) {
-			throw2 = new BowlingThrow(maxNum - result1);
+			throw2 = new BowlingThrow(maxNum - result1, true);
 		}
 		if (numThrows == 2 && result1 == maxNum) {
-			throw2 = new BowlingThrow(maxNum);
+			throw2 = new BowlingThrow(maxNum, true);
 		}
 	}
 
@@ -42,8 +48,16 @@ public class Frame {
 		return throw1;
 	}
 
+	public void setThrow1(BowlingThrow throw1) {
+		this.throw1 = throw1;
+	}
+
 	public BowlingThrow getThrow2() {
 		return throw2;
+	}
+
+	public void setThrow2(BowlingThrow throw2) {
+		this.throw2 = throw2;
 	}
 
 	public boolean isStrike() {
