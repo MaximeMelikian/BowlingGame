@@ -8,76 +8,82 @@ package model;
  */
 public class Frame {
 
-	private BowlingThrow throw1;
-	private BowlingThrow throw2;
-	private final int maxNum = 10;
-	private boolean isStrike = false;
-	private boolean isSpare = false;
-	private final boolean isBonusFrame;
+	private final int frameNumber;
+	private final String marks;
+	private final FrameType type;
+	private final Integer ball1;
+	private final Integer ball2;
 
-	public Frame(boolean bonus) {
-		this.isBonusFrame = bonus;
+	public Frame(int frameNumber, String marks) {
+		this.frameNumber = frameNumber;
+		this.marks = marks;
+		this.type = defineFrameType();
+		this.ball1 = defineBall1();
+		this.ball2 = defineBall2();
 	}
 
-	public void playFrame() {
-		throw1 = new BowlingThrow(maxNum, true);
-		int result1 = throw1.getScoreBall();
-		if (result1 < 10) {
-			throw2 = new BowlingThrow(maxNum - result1, true);
+	private FrameType defineFrameType() {
+		int frameNumber = getFrameNumber();
+		if (frameNumber == Constants.FRAME_NUMBER + 1) {
+			return FrameType.BONUS;
 		}
-		if (result1 == maxNum) {
-			setStrike(true);
+		String marks = getMarks();
+		if ("X".equals(marks.substring(0, 1))) {
+			return FrameType.STRIKE;
 		}
-		if (!isStrike && (result1 + throw2.getScoreBall() == maxNum)) {
-			setSpare(true);
+		if ("/".equals(marks.subSequence(1, 2))) {
+			return FrameType.SPARE;
 		}
+		return FrameType.NORMAL;
 	}
 
-	public void playBonusFrame(int numThrows) {
-		throw1 = new BowlingThrow(maxNum, true);
-		int result1 = throw1.getScoreBall();
-		if (numThrows == 2 && result1 < maxNum) {
-			throw2 = new BowlingThrow(maxNum - result1, true);
+	private Integer defineBall1() {
+		String pos1 = getMarks().substring(0, 1);
+		if ("X".equals(pos1)) {
+			return Constants.MAX_POINTS;
 		}
-		if (numThrows == 2 && result1 == maxNum) {
-			throw2 = new BowlingThrow(maxNum, true);
+		return "-".equals(pos1) ? 0 : Integer.valueOf(pos1);
+	}
+
+	private Integer defineBall2() {
+		if (getMarks().length() < 2) {
+			return null;
 		}
+		String pos2 = getMarks().substring(1, 2);
+		if ("X".equals(pos2)) {
+			return Constants.MAX_POINTS;
+		}
+		if ("/".equals(pos2)) {
+			return Constants.MAX_POINTS - getBall1();
+		}
+		return "-".equals(pos2) ? 0 : Integer.valueOf(pos2);
 	}
 
-	public BowlingThrow getThrow1() {
-		return throw1;
+	public int getFrameNumber() {
+		return frameNumber;
 	}
 
-	public void setThrow1(BowlingThrow throw1) {
-		this.throw1 = throw1;
+	public String getMarks() {
+		return marks;
 	}
 
-	public BowlingThrow getThrow2() {
-		return throw2;
+	public FrameType getType() {
+		return type;
 	}
 
-	public void setThrow2(BowlingThrow throw2) {
-		this.throw2 = throw2;
+	public Integer getBall1() {
+		return ball1;
 	}
 
-	public boolean isStrike() {
-		return isStrike;
+	public Integer getBall2() {
+		return ball2;
 	}
 
-	public void setStrike(boolean isStrike) {
-		this.isStrike = isStrike;
-	}
-
-	public boolean isSpare() {
-		return isSpare;
-	}
-
-	public void setSpare(boolean isSpare) {
-		this.isSpare = isSpare;
-	}
-
-	public boolean isBonusFrame() {
-		return isBonusFrame;
+	@Override
+	public String toString() {
+		String infos1 = "frame " + getFrameNumber() + ", marks " + getMarks() + ", type : " + getType();
+		String infos2 = ", ball1 " + getBall1() + " ball2 " + getBall2() + "\n";
+		return infos1 + infos2;
 	}
 
 }

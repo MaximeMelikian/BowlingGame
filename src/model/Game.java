@@ -24,6 +24,11 @@ public class Game {
 		System.out.println("Correct frames : " + checkPieces);
 		sequenceConverter.populateFrameList();
 
+		if (!sequenceValidity || !checkPieces) {
+			System.out.println("Anomaly detected in sequence, abort game.");
+			return;
+		}
+
 		// Display score table
 		ScoreTable scoreTable = new ScoreTable();
 		scoreTable.calculateScores(sequenceConverter.getFrameList());
