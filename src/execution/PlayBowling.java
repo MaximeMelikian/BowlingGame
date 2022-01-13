@@ -26,6 +26,8 @@ public class PlayBowling {
 		System.out.print("\nPlay all 5 plus spare ! ");
 		game.playGame(ALL_5_SPARE);
 
+		System.out.print("\nPlay random game ");
+		game.playGame(game.simulateRandomSequence());
 	}
 
 }
